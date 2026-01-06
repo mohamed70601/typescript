@@ -10,23 +10,33 @@ type Order = {
   status: "ordered" | "completed";
 };
 
-const menu: Pizza[] = [
-  { id: 1, name: "Margarita", price: 8 },
-  { id: 2, name: "Pepperoni", price: 10 },
-  { id: 3, name: "Hawaiian", price: 10 },
-  { id: 4, name: "Veggie", price: 9 },
-];
-
 let cashInRegister = 100;
 let nextOrderId = 1;
+let nextPizzaId = 1;
+
+const menu: Pizza[] = [
+  { id: nextPizzaId++, name: "Margarita", price: 8 },
+  { id: nextPizzaId++, name: "Pepperoni", price: 10 },
+  { id: nextPizzaId++, name: "Hawaiian", price: 10 },
+  { id: nextPizzaId++, name: "Veggie", price: 9 },
+];
+
 // const orderQueue: Order[] = [];
 const orderHistory: Array<Order> = [];
 
-function addNewPizza(pizzaObj: Pizza) {
-  menu.push(pizzaObj);
+function addNewPizza(pizzaObj: Omit<Pizza, "id">): Pizza {
+  const newPizza: Pizza = {
+    id: nextPizzaId++,
+    ...pizzaObj,
+  };
+  menu.push(newPizza);
+  return newPizza;
 }
+addNewPizza({ name: "Chicken Ranch", price: 12 });
+addNewPizza({ name: "BBQ", price: 12 });
+addNewPizza({ name: "Spicy", price: 11 });
 
-function placeOrder(pizzaName: string) {
+function placeOrder(pizzaName: string): Order | undefined {
   const selectedPizza = menu.find((pizzaObj) => pizzaObj.name === pizzaName);
   if (!selectedPizza) {
     console.error(`${pizzaName} does not exist in the menu`);
@@ -43,7 +53,25 @@ function placeOrder(pizzaName: string) {
   return newOrder;
 }
 
-function completeOrder(orderId: number) {
+// let orderQueue: [] = [];
+
+// function addToArray<T>(array: T[], item: T): T[] {
+//   array.push(item);
+//   return array;
+// }
+
+// addToArray<Pizza>(menu, {
+//   id: nextPizzaId++,
+//   name: "Chicken Ranch",
+//   price: 12,
+// });
+// addToArray<Order>(orderQueue, {
+//   id: nextPizzaId++,
+//   pizza: menu[2],
+//   status: "completed",
+// });
+
+function completeOrder(orderId: number): Order | undefined {
   const order = orderHistory.find((order) => order.id === orderId);
   if (!order) {
     console.error(`${orderId} was not found in orderQueue`);
@@ -53,9 +81,19 @@ function completeOrder(orderId: number) {
   return order;
 }
 
-addNewPizza({ id: 5, name: "Chicken Ranch", price: 12 });
-addNewPizza({ id: 6, name: "BBQ", price: 12 });
-addNewPizza({ id: 7, name: "Spicy", price: 11 });
+function getPizzaDetail(identifier: string | number): Pizza | undefined {
+  if (typeof identifier === "string") {
+    return menu.find(
+      (pizza) => pizza.name.toLowerCase() === identifier.toLowerCase()
+    );
+  } else if (typeof identifier === "number") {
+    return menu.find((pizza) => pizza.id === identifier);
+  } else {
+    throw new TypeError(
+      "Parameter `identifier` must be either a string or a number"
+    );
+  }
+}
 
 placeOrder("Chicken Ranch");
 completeOrder(1);
