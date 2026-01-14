@@ -15,5 +15,4 @@ console.log(person.age);
 
 for (const hobby of person.hobbies) {
   console.log(hobby.toLocaleUpperCase());
-  // console.log(hobby.map());
 }
