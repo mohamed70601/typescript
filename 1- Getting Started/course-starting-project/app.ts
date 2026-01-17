@@ -31,6 +31,7 @@ const person = {
 // person.role[0] = 10;
 
 let favoriteActivities: string[];
+// let favoriteActivities: any[];
 favoriteActivities = ["Sports"];
 
 console.log(person.age);
