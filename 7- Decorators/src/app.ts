@@ -52,6 +52,7 @@ function Log2(target: any, name: string, desriptor: PropertyDescriptor) {
   console.log(target);
   console.log(name);
   console.log(desriptor);
+  // return {};
 }
 
 function Log3(
